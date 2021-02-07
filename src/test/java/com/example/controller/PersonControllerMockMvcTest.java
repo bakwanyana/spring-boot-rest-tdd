@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,8 +23,6 @@ public class PersonControllerMockMvcTest implements PersonControllerTestInterfac
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private PersonController personController;
     @MockBean
     private PersonService personService; // this could always be an interface
 
@@ -38,6 +36,9 @@ public class PersonControllerMockMvcTest implements PersonControllerTestInterfac
                 .andExpect(jsonPath("$.id").value(ID))
                 .andExpect(jsonPath("$.name").value(NAME))
                 .andExpect(jsonPath("$.surname").value(SURNAME));
+
+        verify(personService, times(1)).getPerson(ID);
+
     }
 
     @Test
@@ -46,6 +47,9 @@ public class PersonControllerMockMvcTest implements PersonControllerTestInterfac
 
         mockMvc.perform(get("/person/{id}",  ID))
                 .andExpect(status().isNotFound());
+
+        verify(personService, times(1)).getPerson(ID);
+
     }
 
     @Test
@@ -54,5 +58,8 @@ public class PersonControllerMockMvcTest implements PersonControllerTestInterfac
 
         mockMvc.perform(get("/person/{id}",  ID))
                 .andExpect(status().isInternalServerError());
+
+        verify(personService, times(1)).getPerson(ID);
+
     }
 }
