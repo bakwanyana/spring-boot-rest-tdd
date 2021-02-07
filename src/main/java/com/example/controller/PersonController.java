@@ -28,4 +28,9 @@ public class PersonController {
     private void handleResourceNotFoundException(HttpServletResponse response) {
         response.setStatus(HttpStatus.NOT_FOUND.value());
     }
+
+    @ExceptionHandler(Exception.class)
+    private void handleGenericExceptions(HttpServletResponse response) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
 }

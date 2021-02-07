@@ -57,6 +57,6 @@ public class PersonControllerMockMvcTest {
         doThrow(new RuntimeException()).when(personService).getPerson(ID);
 
         mockMvc.perform(get("/person/{id}",  ID))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 }
