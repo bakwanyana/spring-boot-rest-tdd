@@ -5,7 +5,6 @@ import com.example.model.Person;
 import com.example.service.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PersonController.class)
 @ActiveProfiles("dev")
-public class PersonControllerMockMvcTest {
+public class PersonControllerMockMvcTest implements PersonControllerTestInterface {
 
     /*This demonstrates a test that mocks out embedded servlet container */
 
@@ -28,9 +27,6 @@ public class PersonControllerMockMvcTest {
     private PersonController personController;
     @MockBean
     private PersonService personService; // this could always be an interface
-    public static final long ID = 1L;
-    public static final String NAME = "John";
-    public static final String SURNAME = "Snow";
 
     @Test
     public void thatOkIsReturnedWhenPersonRequestedExists() throws Exception {
