@@ -10,8 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PersonController.class)
 @ActiveProfiles("dev")
@@ -25,25 +27,28 @@ public class PersonControllerMockMvcTest {
     private PersonController personController;
     @MockBean
     private PersonService personService; // this could always be an interface
+    public static final long ID = 1L;
+    public static final String NAME = "John";
+    public static final String SURNAME = "Snow";
 
     @Test
     public void thatOkIsReturnedWhenPersonRequestedExists() throws Exception {
-        long id = 1L;
-        String name = "John";
-        String surname = "Snow";
 
-        Person person = new Person(id, name, surname);
-        doReturn(person).when(personService).getPerson(id);
+        Person person = new Person(ID, NAME, SURNAME);
+        doReturn(person).when(personService).getPerson(ID);
 
-        mockMvc.perform(get("/person/{id}",  1L))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.surname").value(surname));
+        mockMvc.perform(get("/person/{id}",  ID))
+                .andExpect(jsonPath("$.id").value(ID))
+                .andExpect(jsonPath("$.name").value(NAME))
+                .andExpect(jsonPath("$.surname").value(SURNAME));
     }
 
     @Test
-    public void thatNotFoundIsReturnedWhenPersonNotFound() {
+    public void thatNotFoundIsReturnedWhenPersonNotFound() throws Exception {
+        doThrow(new ResourceNotFoundException()).when(personService).getPerson(ID);
 
+        mockMvc.perform(get("/person/{id}",  ID))
+                .andExpect(status().isNotFound());
     }
 
     @Test
