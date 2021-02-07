@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.Person;
 import com.example.service.PersonService;
 import org.junit.jupiter.api.Test;
