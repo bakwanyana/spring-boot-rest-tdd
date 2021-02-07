@@ -53,7 +53,10 @@ public class PersonControllerMockMvcTest {
     }
 
     @Test
-    public void thatInternalServerErrorIsReturnedWhenExceptionOccurs() {
+    public void thatInternalServerErrorIsReturnedWhenExceptionOccurs() throws Exception {
+        doThrow(new RuntimeException()).when(personService).getPerson(ID);
 
+        mockMvc.perform(get("/person/{id}",  ID))
+                .andExpect(status().isBadRequest());
     }
 }
